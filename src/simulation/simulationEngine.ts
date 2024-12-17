@@ -1,17 +1,24 @@
+import { Intersection } from "../core/intersection.js";
+import { CommandProcessor } from "../io/commandProcessor.js";
+import { JsonData } from "../io/inputParser.js";
+
 export class SimulationEngine {
-    simulationObjects: unknown[];
+    intersection: Intersection;
+    data: JsonData;
 
-    constructor(simulationObjects: unknown[] = []) {
-        this.simulationObjects = simulationObjects;
+    constructor(intersection: Intersection, data: JsonData) {
+        this.intersection = intersection;
+        this.data = data;
     }
 
-    addSimulationObject(simulationObject: unknown) {
-        this.simulationObjects.push(simulationObject);
-    }
+    run() {
+        const processor = new CommandProcessor();
 
-    simulate() {
-        this.simulationObjects.forEach((simulationObject) => {
-            simulationObject.simulate();
-        });
+        this.intersection = processor.processCommands(
+            this.data,
+            this.intersection
+        );
+
+        this.intersection.display();
     }
 }

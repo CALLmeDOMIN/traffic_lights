@@ -28,10 +28,11 @@ export class Intersection {
     }
 
     display() {
-        console.log("Intersection");
+        console.log("\nIntersection\n======");
         this.roads.north.display();
         this.roads.south.display();
         this.roads.east.display();
         this.roads.west.display();
+        console.log("======");
     }
 }

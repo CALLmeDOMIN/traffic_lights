@@ -1,16 +1,18 @@
 import { exit } from "process";
 import { Intersection } from "./core/intersection.js";
 import { InputParser } from "./io/inputParser.js";
+import { SimulationEngine } from "./simulation/simulationEngine.js";
 
-const io = new InputParser("input.json");
+const intersection = new Intersection();
 
-const input = io.parse();
-if (!input) {
-    console.error("Error parsing input file");
+const parser = new InputParser("input.json");
+const commands = parser.parse();
+
+if (!commands) {
+    console.error("Error parsing commands");
     exit(1);
 }
 
-const intersection = new Intersection();
-io.processCommands(input.commands, intersection);
+const simulation = new SimulationEngine(intersection, commands);
 
-intersection.display();
+simulation.run();
