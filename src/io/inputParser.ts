@@ -1,9 +1,5 @@
 import { readFileSync } from "fs";
-import { Command } from "./commandProcessor.js";
-
-export interface JsonData {
-    commands: Command[];
-}
+import { type JsonData } from "../types/jsonData.js";
 
 export class InputParser {
     jsonFile: string;

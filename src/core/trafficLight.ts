@@ -1,10 +1,10 @@
 type TrafficLightState = "red" | "yellow" | "green";
 
 export class TrafficLight {
-    state: TrafficLightState = "red";
+    state: TrafficLightState;
 
-    constructor(state: TrafficLightState = "red") {
-        this.state = state;
+    constructor(initialState: TrafficLightState = "red") {
+        this.state = initialState;
     }
 
     change() {

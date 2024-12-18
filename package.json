@@ -5,7 +5,7 @@
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc -p tsconfig.build.json",
         "start": "node dist/index.js",
         "dev": "node --loader ts-node/esm src/index.ts",
         "lint": "eslint 'src/**/*.{ts,js}'",
@@ -16,6 +16,7 @@
     "license": "ISC",
     "devDependencies": {
         "@eslint/js": "^9.17.0",
+        "@jest/types": "^29.6.3",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.10.2",
         "@typescript-eslint/eslint-plugin": "^8.18.1",
@@ -31,5 +32,13 @@
     },
     "dependencies": {
         "yocto-queue": "^1.1.1"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "verbose": true,
+        "moduleNameMapper": {
+            "^(\\.{1,2}/.*)\\.js$": "$1"
+        }
     }
 }
