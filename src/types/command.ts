@@ -1,18 +1,18 @@
 import { Direction } from "../core/road.js";
 
 interface BaseCommand {
-    type: string;
+  type: string;
 }
 
 export interface AddVehicleCommand extends BaseCommand {
-    type: "addVehicle";
-    vehicleId: string;
-    startRoad: Direction;
-    endRoad: Direction;
+  type: "addVehicle";
+  vehicleId: string;
+  startRoad: Direction;
+  endRoad: Direction;
 }
 
 export interface StepCommand extends BaseCommand {
-    type: "step";
+  type: "step";
 }
 
 export type Command = AddVehicleCommand | StepCommand;

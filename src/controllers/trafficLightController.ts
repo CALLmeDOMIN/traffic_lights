@@ -1,15 +1,16 @@
-import { TrafficLight } from "../core/trafficLight.js";
+import { Intersection } from "../core/intersection.js";
+
+const STEPS_PER_CHANGE = 2;
 
 export class TrafficLightController {
-    trafficLights: TrafficLight[];
+  private stepCount: number = 0;
 
-    constructor(trafficLights: TrafficLight[]) {
-        this.trafficLights = trafficLights;
-    }
+  handleTrafficLightChange(intersection: Intersection): void {
+    this.stepCount++;
 
-    change() {
-        this.trafficLights.forEach((trafficLight) => {
-            trafficLight.change();
-        });
+    if (this.stepCount >= STEPS_PER_CHANGE) {
+      intersection.change();
+      this.stepCount = 0;
     }
+  }
 }

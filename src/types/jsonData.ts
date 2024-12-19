@@ -1,5 +1,13 @@
 import { Command } from "./command.js";
 
 export interface JsonData {
-    commands: Command[];
+  commands: Command[];
+}
+
+export interface StepStatus {
+  leftVehicles: string[];
+}
+
+export interface OutputData {
+  stepStatuses: StepStatus[];
 }

@@ -9,8 +9,8 @@ const parser = new InputParser("input.json");
 const commands = parser.parse();
 
 if (!commands) {
-    console.error("Error parsing commands");
-    exit(1);
+  console.error("Error parsing commands");
+  exit(1);
 }
 
 const simulation = new SimulationEngine(intersection, commands);
