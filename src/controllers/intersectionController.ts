@@ -1,67 +1,100 @@
-import { Intersection } from "../core/intersection.js";
-import { Direction } from "../core/road.js";
-import { Vehicle } from "../core/vehicle.js";
+import { type Intersection } from "../core/intersection.js";
+import { type Vehicle } from "../core/vehicle.js";
+import { type Road } from "../core/road.js";
+import { type Movement } from "../types/traffic.js";
+
+export const CONFLICTING_MOVEMENTS: [Movement, Movement][] = [
+  [
+    { from: "north", to: "south" },
+    { from: "south", to: "west" },
+  ],
+  [
+    { from: "south", to: "north" },
+    { from: "north", to: "east" },
+  ],
+  [
+    { from: "west", to: "east" },
+    { from: "east", to: "south" },
+  ],
+  [
+    { from: "east", to: "west" },
+    { from: "west", to: "north" },
+  ],
+];
 
 export class IntersectionController {
   handleVehicleMovement(intersection: Intersection): void {
-    for (const direction of Object.keys(intersection.roads) as Direction[]) {
-      const road = intersection.roads[direction];
-
-      if (road.trafficLight.state === "green" && road.vehicles.size > 0) {
+    Object.entries(intersection.roads)
+      .filter(([, road]) => this.canProcessRoad(road))
+      .forEach(([, road]) => {
         const vehicle = road.vehicles.peek();
-        if (!vehicle) {
-          continue;
-        }
-
-        if (this.canMoveVehicle(vehicle, intersection)) {
+        if (vehicle && this.canMoveVehicle(vehicle, intersection)) {
           road.removeVehicle();
         }
-      }
-    }
+      });
+  }
+
+  private canProcessRoad(road: Road): boolean {
+    return road.trafficLight.state === "green" && road.vehicles.size > 0;
   }
 
   private canMoveVehicle(
     vehicle: Vehicle,
     intersection: Intersection,
   ): boolean {
-    if (!intersection.roads[vehicle.endDirection]) {
-      return false;
-    }
+    const vehicleMovement = vehicle.movement;
 
-    const startRoad = intersection.roads[vehicle.startDirection];
-    if (startRoad.trafficLight.state !== "green") {
-      return false;
-    }
-
-    for (const [direction, road] of Object.entries(intersection.roads)) {
-      if (direction === vehicle.startDirection) continue;
-
-      if (road.trafficLight.state === "green" && road.vehicles.size > 0) {
-        const otherVehicle = road.vehicles.peek();
-        if (otherVehicle && this.isConflicting(vehicle, otherVehicle)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return (
+      this.isValidDestination(vehicleMovement, intersection) &&
+      this.hasGreenLight(vehicleMovement, intersection) &&
+      !this.hasConflictingVehicles(vehicleMovement, intersection)
+    );
   }
 
-  private isConflicting(vehicle1: Vehicle, vehicle2: Vehicle): boolean {
-    const movement1 = `${vehicle1.startDirection},${vehicle1.endDirection}`;
-    const movement2 = `${vehicle2.startDirection},${vehicle2.endDirection}`;
+  private isValidDestination(movement: Movement, intersection: Intersection) {
+    return !!intersection.roads[movement.to];
+  }
 
-    if (movement1 === movement2) return false;
+  private hasGreenLight(
+    movement: Movement,
+    intersection: Intersection,
+  ): boolean {
+    return intersection.roads[movement.from].trafficLight.state === "green";
+  }
 
-    const conflictingPairs = [
-      ["north,west", "south,east"],
-      ["west,south", "east,north"],
-    ];
+  private hasConflictingVehicles(
+    movement: Movement,
+    intersection: Intersection,
+  ): boolean {
+    return Object.entries(intersection.roads)
+      .filter(([direction]) => direction !== movement.from)
+      .some(([, road]) => this.isConflictingRoad(road, movement));
+  }
 
-    return conflictingPairs.some(
-      ([m1, m2]) =>
-        (movement1 === m1 && movement2 === m2) ||
-        (movement1 === m2 && movement2 === m1),
+  private isConflictingRoad(road: Road, movement: Movement): boolean {
+    if (road.trafficLight.state !== "green" || road.vehicles.size === 0)
+      return false;
+
+    const otherVehicle = road.vehicles.peek();
+
+    return otherVehicle
+      ? this.isConflictingMovement(movement, otherVehicle.movement)
+      : false;
+  }
+
+  private isConflictingMovement(m1: Movement, m2: Movement): boolean {
+    if (m1.from === m2.from || m1.to === m2.to) return true;
+
+    return CONFLICTING_MOVEMENTS.some(
+      ([conflict1, conflict2]) =>
+        (this.movementEquals(m1, conflict1) &&
+          this.movementEquals(m2, conflict2)) ||
+        (this.movementEquals(m1, conflict2) &&
+          this.movementEquals(m2, conflict1)),
     );
+  }
+
+  private movementEquals(m1: Movement, m2: Movement): boolean {
+    return m1.from === m2.from && m1.to === m2.to;
   }
 }

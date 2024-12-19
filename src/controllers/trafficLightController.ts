@@ -1,4 +1,4 @@
-import { Intersection } from "../core/intersection.js";
+import { type Intersection } from "../core/intersection.js";
 
 const STEPS_PER_CHANGE = 2;
 

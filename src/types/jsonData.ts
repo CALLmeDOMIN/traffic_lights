@@ -1,4 +1,4 @@
-import { Command } from "./command.js";
+import { type Command } from "./command.js";
 
 export interface JsonData {
   commands: Command[];

@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+
 import { type JsonData } from "../types/jsonData.js";
 
 export class InputParser {

@@ -1,4 +1,4 @@
-import { Direction } from "../core/road.js";
+import type { Movement, Direction } from "../types/traffic.js";
 
 const PRIORITY_ONE_MOVEMENTS = new Map([
   ["north,south", 1],
@@ -13,9 +13,8 @@ const PRIORITY_ONE_MOVEMENTS = new Map([
 
 export class Vehicle {
   vehicleId: string;
-  startDirection: Direction;
-  endDirection: Direction;
-  // priority: number;
+  movement: Movement;
+  priority: number;
 
   constructor(
     vehicleId: string,
@@ -23,13 +22,12 @@ export class Vehicle {
     endDirection: Direction,
   ) {
     this.vehicleId = vehicleId;
-    this.startDirection = startDirection;
-    this.endDirection = endDirection;
-    // this.priority = this.determinePriority(startDirection, endDirection);
+    this.movement = { from: startDirection, to: endDirection };
+    this.priority = this.determinePriority(this.movement);
   }
 
-  private determinePriority(startRoad: Direction, endRoad: Direction): number {
-    const movement = `${startRoad},${endRoad}`;
-    return PRIORITY_ONE_MOVEMENTS.get(movement) || 2;
+  private determinePriority(movement: Movement): number {
+    const movementString = `${movement.from},${movement.to}`;
+    return PRIORITY_ONE_MOVEMENTS.get(movementString) || 2;
   }
 }

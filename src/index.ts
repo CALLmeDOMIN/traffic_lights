@@ -1,4 +1,5 @@
 import { exit } from "process";
+
 import { Intersection } from "./core/intersection.js";
 import { InputParser } from "./io/inputParser.js";
 import { SimulationEngine } from "./simulation/simulationEngine.js";

@@ -1,12 +1,7 @@
 import { Road } from "./road.js";
 import { TrafficLight } from "./trafficLight.js";
 
-type Roads = {
-  north: Road;
-  south: Road;
-  east: Road;
-  west: Road;
-};
+import { type Roads } from "../types/traffic.js";
 
 export class Intersection {
   roads: Roads;

@@ -1,25 +1,21 @@
 import { writeFileSync } from "fs";
-import { IntersectionController } from "./../controllers/intersectionController.js";
-import { TrafficLightController } from "./../controllers/trafficLightController.js";
-import { Intersection } from "../core/intersection.js";
 import { CommandProcessor } from "../io/commandProcessor.js";
+
+import { type Intersection } from "../core/intersection.js";
 import { type Command } from "../types/command.js";
 import { type JsonData } from "../types/jsonData.js";
+import { type StepStatus } from "../types/traffic.js";
 
 export class SimulationEngine {
   intersection: Intersection;
   data: JsonData;
   processor: CommandProcessor;
-  private trafficLightController: TrafficLightController;
-  private intersectionController: IntersectionController;
-  private stepStatuses: { leftVehicles: string[] }[] = [];
+  private stepStatuses: StepStatus[] = [];
 
   constructor(intersection: Intersection, data: JsonData) {
     this.intersection = intersection;
     this.data = data;
     this.processor = new CommandProcessor();
-    this.trafficLightController = new TrafficLightController();
-    this.intersectionController = new IntersectionController();
   }
 
   run() {

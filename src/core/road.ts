@@ -1,9 +1,9 @@
 import Queue from "yocto-queue";
 
 import { TrafficLight } from "./trafficLight.js";
-import { Vehicle } from "./vehicle.js";
 
-export type Direction = "north" | "south" | "east" | "west";
+import { type Vehicle } from "./vehicle.js";
+import { type Direction } from "../types/traffic.js";
 
 export class Road {
   trafficLight: TrafficLight;

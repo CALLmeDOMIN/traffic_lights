@@ -1,4 +1,4 @@
-type TrafficLightState = "red" | "yellow" | "green";
+import { type TrafficLightState } from "../types/traffic.js";
 
 export class TrafficLight {
   state: TrafficLightState;

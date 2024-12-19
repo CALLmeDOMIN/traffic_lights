@@ -1,7 +1,8 @@
 import { IntersectionController } from "../controllers/intersectionController.js";
 import { TrafficLightController } from "../controllers/trafficLightController.js";
-import { Intersection } from "../core/intersection.js";
 import { Vehicle } from "../core/vehicle.js";
+
+import { type Intersection } from "../core/intersection.js";
 import { type AddVehicleCommand } from "../types/command.js";
 
 export class CommandProcessor {

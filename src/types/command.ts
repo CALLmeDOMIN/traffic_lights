@@ -1,4 +1,4 @@
-import { Direction } from "../core/road.js";
+import { type Direction } from "../types/traffic.js";
 
 interface BaseCommand {
   type: string;
