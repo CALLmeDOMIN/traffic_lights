@@ -1,9 +1,11 @@
 import { writeFileSync } from "fs";
 import { CommandProcessor } from "../io/commandProcessor.js";
+import { FixedTimeController } from "../controllers/fixedTimeController.js";
+import { AdaptiveController } from "../controllers/adaptiveController.js";
 
 import { type Intersection } from "../core/intersection.js";
 import { type Command } from "../types/command.js";
-import { type JsonData } from "../types/jsonData.js";
+import type { OutputData, JsonData } from "../types/jsonData.js";
 import { type StepStatus } from "../types/traffic.js";
 
 export class SimulationEngine {
@@ -12,10 +14,18 @@ export class SimulationEngine {
   processor: CommandProcessor;
   private stepStatuses: StepStatus[] = [];
 
-  constructor(intersection: Intersection, data: JsonData) {
+  constructor(
+    intersection: Intersection,
+    data: JsonData,
+    controllerType: "fixed" | "adaptive" = "fixed",
+  ) {
     this.intersection = intersection;
     this.data = data;
-    this.processor = new CommandProcessor();
+    this.processor = new CommandProcessor(
+      controllerType === "fixed"
+        ? new FixedTimeController()
+        : new AdaptiveController(),
+    );
   }
 
   run() {
@@ -27,7 +37,7 @@ export class SimulationEngine {
       }
     }
 
-    const output = { stepStatuses: this.stepStatuses };
+    const output: OutputData = { stepStatuses: this.stepStatuses };
     writeFileSync("output.json", JSON.stringify(output, null, 2));
   }
 
@@ -38,6 +48,7 @@ export class SimulationEngine {
         break;
       }
       case "step": {
+        this.intersection.display();
         const stepStatus = this.processor.handleStep(this.intersection);
         this.stepStatuses.push(stepStatus);
         break;

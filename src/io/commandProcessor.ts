@@ -1,16 +1,18 @@
 import { IntersectionController } from "../controllers/intersectionController.js";
-import { TrafficLightController } from "../controllers/trafficLightController.js";
+import { FixedTimeController } from "../controllers/fixedTimeController.js";
 import { Vehicle } from "../core/vehicle.js";
 
 import { type Intersection } from "../core/intersection.js";
 import { type AddVehicleCommand } from "../types/command.js";
+import { type TrafficController } from "../controllers/trafficController.js";
 
 export class CommandProcessor {
-  private trafficLightController: TrafficLightController;
+  private trafficLightController: TrafficController;
   private intersectionController: IntersectionController;
 
-  constructor() {
-    this.trafficLightController = new TrafficLightController();
+  constructor(trafficController?: TrafficController) {
+    this.trafficLightController =
+      trafficController ?? new FixedTimeController();
     this.intersectionController = new IntersectionController();
   }
 
@@ -27,21 +29,11 @@ export class CommandProcessor {
   }
 
   handleStep(intersection: Intersection): { leftVehicles: string[] } {
-    const beforeVehicles = this.getAllVehicles(intersection);
-    this.intersectionController.handleVehicleMovement(intersection);
+    const movedVehicles =
+      this.intersectionController.handleVehicleMovement(intersection);
     this.trafficLightController.handleTrafficLightChange(intersection);
-    const afterVehicles = this.getAllVehicles(intersection);
-
-    const leftVehicles = beforeVehicles.filter(
-      (id) => !afterVehicles.includes(id),
-    );
-
-    return { leftVehicles };
-  }
-
-  private getAllVehicles(intersection: Intersection): string[] {
-    return Object.values(intersection.roads)
-      .flatMap((road) => Array.from(road.vehicles))
-      .map((vehicle) => vehicle.vehicleId);
+    return {
+      leftVehicles: movedVehicles.map((v) => v.vehicleId),
+    };
   }
 }
