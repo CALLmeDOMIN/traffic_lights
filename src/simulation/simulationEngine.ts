@@ -1,7 +1,8 @@
-import { writeFileSync } from "fs";
 import { CommandProcessor } from "../io/commandProcessor.js";
+import { OutputFormatter } from "../io/outputFormatter.js";
 import { FixedTimeController } from "../controllers/fixedTimeController.js";
 import { AdaptiveController } from "../controllers/adaptiveController.js";
+import { InvalidCommandError } from "../errors/simulationError.js";
 
 import { type Intersection } from "../core/intersection.js";
 import { type Command } from "../types/command.js";
@@ -13,6 +14,7 @@ export class SimulationEngine {
   data: JsonData;
   processor: CommandProcessor;
   private stepStatuses: StepStatus[] = [];
+  private formatter = new OutputFormatter();
 
   constructor(
     intersection: Intersection,
@@ -28,34 +30,45 @@ export class SimulationEngine {
     );
   }
 
-  run() {
-    for (const command of this.data.commands) {
-      try {
-        this.processCommand(command);
-      } catch (error) {
-        console.error(`Error processing command: ${error}`);
+  run(outputFile: string): void {
+    try {
+      for (const command of this.data.commands) {
+        try {
+          this.processCommand(command);
+        } catch (error) {
+          if (error instanceof InvalidCommandError) {
+            console.error(`Invalid command: ${error.message}`);
+            continue;
+          }
+          throw error;
+        }
       }
-    }
 
-    const output: OutputData = { stepStatuses: this.stepStatuses };
-    writeFileSync("output.json", JSON.stringify(output, null, 2));
+      const output: OutputData = { stepStatuses: this.stepStatuses };
+      this.formatter.writeOutput(output, outputFile);
+    } catch (error) {
+      console.error(`Fatal simulation error: ${error}`);
+      throw error;
+    }
   }
 
-  private processCommand(command: Command): void {
+  getStepStatuses(): StepStatus[] {
+    return this.stepStatuses;
+  }
+
+  protected processCommand(command: Command): void {
     switch (command.type) {
       case "addVehicle": {
         this.processor.handleAddVehicle(command, this.intersection);
         break;
       }
       case "step": {
-        this.intersection.display();
         const stepStatus = this.processor.handleStep(this.intersection);
         this.stepStatuses.push(stepStatus);
         break;
       }
       default:
-        console.warn(`Unknown command type: ${command}`);
-        break;
+        throw new InvalidCommandError(command);
     }
   }
 }

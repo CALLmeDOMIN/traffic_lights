@@ -4,9 +4,15 @@ import { Intersection } from "./core/intersection.js";
 import { InputParser } from "./io/inputParser.js";
 import { SimulationEngine } from "./simulation/simulationEngine.js";
 
-const intersection = new Intersection();
+const [, , inputFile, outputFile] = process.argv;
 
-const parser = new InputParser("input.json");
+if (!inputFile || !outputFile) {
+  console.error("Usage: node src/index.js <inputFile> <outputFile>");
+  exit(1);
+}
+
+const intersection = new Intersection();
+const parser = new InputParser(inputFile);
 const commands = parser.parse();
 
 if (!commands) {
@@ -15,5 +21,4 @@ if (!commands) {
 }
 
 const simulation = new SimulationEngine(intersection, commands);
-
-simulation.run();
+simulation.run(outputFile);
