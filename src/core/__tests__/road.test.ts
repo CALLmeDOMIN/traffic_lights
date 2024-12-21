@@ -27,7 +27,7 @@ describe("Road", () => {
 
   test("constructor should initialize with given direction and traffic light", () => {
     expect(road.direction).toBe("north");
-    expect(road.trafficLight.state).toBe("green");
+    expect(road.trafficLight.state.main).toBe("green");
     expect(Queue).toHaveBeenCalled();
   });
 
@@ -35,7 +35,7 @@ describe("Road", () => {
     const roadWithDefaultLight = new Road("north" as Direction);
     expect(roadWithDefaultLight.direction).toBe("north");
     expect(roadWithDefaultLight.trafficLight).toBeInstanceOf(TrafficLight);
-    expect(roadWithDefaultLight.trafficLight.state).toBe("red");
+    expect(roadWithDefaultLight.trafficLight.state.main).toBe("red");
     expect(Queue).toHaveBeenCalled();
   });
 

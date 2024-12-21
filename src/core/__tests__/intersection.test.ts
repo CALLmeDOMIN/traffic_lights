@@ -8,10 +8,10 @@ describe("Intersection", () => {
   });
 
   test("should initialize with correct traffic light states", () => {
-    expect(intersection.roads.north.trafficLight.state).toBe("green");
-    expect(intersection.roads.south.trafficLight.state).toBe("green");
-    expect(intersection.roads.east.trafficLight.state).toBe("red");
-    expect(intersection.roads.west.trafficLight.state).toBe("red");
+    expect(intersection.roads.north.trafficLight.state.main).toBe("green");
+    expect(intersection.roads.south.trafficLight.state.main).toBe("green");
+    expect(intersection.roads.east.trafficLight.state.main).toBe("red");
+    expect(intersection.roads.west.trafficLight.state.main).toBe("red");
   });
 
   test("should initialize with empty vehicle queues", () => {
@@ -24,10 +24,10 @@ describe("Intersection", () => {
   test("should change traffic light states correctly", () => {
     intersection.change();
 
-    expect(intersection.roads.north.trafficLight.state).toBe("red");
-    expect(intersection.roads.south.trafficLight.state).toBe("red");
-    expect(intersection.roads.east.trafficLight.state).toBe("green");
-    expect(intersection.roads.west.trafficLight.state).toBe("green");
+    expect(intersection.roads.north.trafficLight.state.main).toBe("red");
+    expect(intersection.roads.south.trafficLight.state.main).toBe("red");
+    expect(intersection.roads.east.trafficLight.state.main).toBe("green");
+    expect(intersection.roads.west.trafficLight.state.main).toBe("green");
   });
 
   test("should have all required roads", () => {

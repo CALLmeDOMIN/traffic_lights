@@ -28,7 +28,7 @@ export class Road {
   display() {
     console.log("Road: ", this.direction);
     console.log("Traffic Light: ", this.trafficLight.state);
-    console.log("Vehicles: ", this.vehicles.size);
+    console.log("Vehicles: ", this.vehicles.size());
     for (const vehicle of this.vehicles.toArray()) {
       console.log(vehicle);
     }

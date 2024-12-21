@@ -48,6 +48,7 @@ export class SimulationEngine {
         break;
       }
       case "step": {
+        this.intersection.display();
         const stepStatus = this.processor.handleStep(this.intersection);
         this.stepStatuses.push(stepStatus);
         break;

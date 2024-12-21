@@ -1,21 +1,28 @@
-import { type TrafficLightState } from "../types/traffic.js";
+import {
+  type MainLightState,
+  type TrafficLightState,
+} from "../types/traffic.js";
 
 export class TrafficLight {
   state: TrafficLightState;
 
-  constructor(initialState: TrafficLightState = "red") {
-    this.state = initialState;
+  constructor(initialState: MainLightState = "red") {
+    this.state = {
+      main: initialState,
+      arrow: "off",
+    };
   }
 
   change() {
-    if (this.state === "red") {
-      this.state = "yellow";
-      this.state = "green";
-    } else if (this.state === "green") {
-      this.state = "yellow";
-      this.state = "red";
-    } else {
-      this.state = "green";
+    if (this.state.main === "green") {
+      this.state.main = "red";
+      this.state.arrow = "on";
+    } else if (this.state.main === "red") {
+      if (this.state.arrow === "on") {
+        this.state.arrow = "off";
+      } else {
+        this.state.main = "green";
+      }
     }
   }
 }

@@ -1,83 +1,86 @@
+import { TRAFFIC_RULES, type Movement } from "../types/traffic.js";
 import { type Intersection } from "../core/intersection.js";
 import { type Vehicle } from "../core/vehicle.js";
-import { TRAFFIC_RULES, type Movement } from "../types/traffic.js";
-
-export const CONFLICTING_MOVEMENTS: [Movement, Movement][] = [
-  [
-    { from: "north", to: "south" },
-    { from: "south", to: "west" },
-  ],
-  [
-    { from: "south", to: "north" },
-    { from: "north", to: "east" },
-  ],
-  [
-    { from: "west", to: "east" },
-    { from: "east", to: "south" },
-  ],
-  [
-    { from: "east", to: "west" },
-    { from: "west", to: "north" },
-  ],
-];
+import { type TrafficLight } from "../core/trafficLight.js";
 
 export class IntersectionController {
   handleVehicleMovement(intersection: Intersection): Vehicle[] {
     const movedVehicles: Vehicle[] = [];
+    const activeRoads = Object.values(intersection.roads).filter(
+      (road) => road.vehicles.size() > 0,
+    );
 
-    const movableVehicles = Object.values(intersection.roads)
-      .filter((road) => road.trafficLight.state === "green")
-      .flatMap((road) => road.vehicles.toArray())
-      .sort((v1, v2) => v1.priority - v2.priority);
+    for (const road of activeRoads) {
+      const vehicle = road.vehicles.front();
+      if (
+        !vehicle ||
+        !this.canVehicleMove(vehicle, movedVehicles, intersection)
+      )
+        continue;
 
-    for (const vehicle of movableVehicles) {
-      if (this.canMoveWithoutConflicts(vehicle, movedVehicles, intersection)) {
-        const road = intersection.roads[vehicle.movement.from];
-        road.removeVehicle();
-        movedVehicles.push(vehicle);
-      }
+      road.vehicles.dequeue();
+      movedVehicles.push(vehicle);
     }
 
     return movedVehicles;
   }
 
-  private canMoveWithoutConflicts(
+  private canVehicleMove(
     vehicle: Vehicle,
     movedVehicles: Vehicle[],
     intersection: Intersection,
   ): boolean {
-    if (
-      !this.isValidDestination(vehicle.movement, intersection) ||
-      !this.hasGreenLight(vehicle.movement, intersection)
-    ) {
-      return false;
-    }
+    const { movement } = vehicle;
+    if (!intersection.roads[movement.to]) return false;
+
+    const light = intersection.roads[movement.from].trafficLight;
+    const isRightTurn = TRAFFIC_RULES.PRIORITY_TWO.has(
+      `${movement.from},${movement.to}`,
+    );
+
+    if (!this.hasGreenLight(light, isRightTurn)) return false;
+    if (this.hasConflictingTraffic(isRightTurn, intersection)) return false;
 
     return !movedVehicles.some((moved) =>
       this.isConflictingMovement(vehicle.movement, moved.movement),
     );
   }
 
-  private isValidDestination(movement: Movement, intersection: Intersection) {
-    return !!intersection.roads[movement.to];
+  private hasGreenLight(light: TrafficLight, isRightTurn: boolean): boolean {
+    return (
+      light.state.main === "green" ||
+      (isRightTurn && light.state.arrow === "on")
+    );
   }
 
-  private hasGreenLight(
-    movement: Movement,
+  private hasConflictingTraffic(
+    isRightTurn: boolean,
     intersection: Intersection,
   ): boolean {
-    return intersection.roads[movement.from].trafficLight.state === "green";
+    if (!isRightTurn) return false;
+
+    return Object.values(intersection.roads).some((road) => {
+      const vehicle = road.vehicles.front();
+      if (!vehicle) return false;
+
+      return (
+        road.trafficLight.state.main === "green" &&
+        TRAFFIC_RULES.PRIORITY_ONE.has(
+          `${vehicle.movement.from},${vehicle.movement.to}`,
+        )
+      );
+    });
   }
 
   private isConflictingMovement(m1: Movement, m2: Movement): boolean {
-    const mov1 = `${m1.from},${m1.to}`;
-    const mov2 = `${m2.from},${m2.to}`;
-
-    if (m1.from === m2.from || m1.to === m2.to) return true;
-
     return TRAFFIC_RULES.CONFLICTS.some(
       ([c1, c2]) =>
-        (mov1 === c1 && mov2 === c2) || (mov1 === c2 && mov2 === c1),
+        (this.isSameMovement(c1, m1) && this.isSameMovement(c2, m2)) ||
+        (this.isSameMovement(c1, m2) && this.isSameMovement(c2, m1)),
     );
+  }
+
+  private isSameMovement(m1: Movement, m2: Movement): boolean {
+    return m1.from === m2.from && m1.to === m2.to;
   }
 }
