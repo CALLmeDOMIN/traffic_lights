@@ -27,7 +27,7 @@ export class IntersectionController {
 
     const movableVehicles = Object.values(intersection.roads)
       .filter((road) => road.trafficLight.state === "green")
-      .flatMap((road) => Array.from(road.vehicles))
+      .flatMap((road) => road.vehicles.toArray())
       .sort((v1, v2) => v1.priority - v2.priority);
 
     for (const vehicle of movableVehicles) {

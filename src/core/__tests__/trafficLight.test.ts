@@ -1,4 +1,4 @@
-import { TrafficLight } from "./trafficLight";
+import { TrafficLight } from "../trafficLight";
 
 describe("TrafficLight", () => {
   it("should initialize with default state 'red'", () => {

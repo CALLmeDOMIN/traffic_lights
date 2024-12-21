@@ -1,4 +1,4 @@
-import Queue from "yocto-queue";
+import { Queue } from "@datastructures-js/queue";
 
 import { TrafficLight } from "./trafficLight.js";
 
@@ -24,11 +24,12 @@ export class Road {
     return this.vehicles.dequeue();
   }
 
+  /* istanbul ignore next */
   display() {
     console.log("Road: ", this.direction);
     console.log("Traffic Light: ", this.trafficLight.state);
     console.log("Vehicles: ", this.vehicles.size);
-    for (const vehicle of this.vehicles) {
+    for (const vehicle of this.vehicles.toArray()) {
       console.log(vehicle);
     }
   }

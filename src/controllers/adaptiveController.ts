@@ -40,7 +40,7 @@ export class AdaptiveController extends TrafficController {
     directions: Direction[],
   ): number {
     return directions.reduce(
-      (sum, direction) => sum + intersection.roads[direction].vehicles.size,
+      (sum, direction) => sum + intersection.roads[direction].vehicles.size(),
       0,
     );
   }

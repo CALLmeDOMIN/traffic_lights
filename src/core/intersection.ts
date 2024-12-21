@@ -22,6 +22,7 @@ export class Intersection {
     this.roads.west.trafficLight.change();
   }
 
+  /* istanbul ignore next */
   display() {
     console.log("\nIntersection\n======");
     this.roads.north.display();
