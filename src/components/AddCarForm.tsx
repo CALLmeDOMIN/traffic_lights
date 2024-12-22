@@ -1,19 +1,17 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { type Direction } from "@/backend/types/traffic";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
 import {
   Select,
   SelectContent,
@@ -24,46 +22,32 @@ import {
 import { Button } from "./ui/button";
 
 const formSchema = z.object({
-  vehicleId: z.string().nonempty(),
   startRoad: z.string().nonempty(),
   endRoad: z.string().nonempty(),
 });
 
 export default function AddCarForm({
   onSave,
+  onAddVehicle,
 }: {
   onSave: (open: boolean) => void;
+  onAddVehicle: (from: Direction, to: Direction) => void;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      vehicleId: "",
       startRoad: "",
       endRoad: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    onAddVehicle(values.startRoad as Direction, values.endRoad as Direction);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="vehicleId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Vehicle number</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="0" {...field} />
-              </FormControl>
-              <FormDescription>Unique number for the vehicle</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="startRoad"

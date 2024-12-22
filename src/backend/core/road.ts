@@ -24,6 +24,10 @@ export class Road {
     return this.vehicles.dequeue();
   }
 
+  getVehiclePosition(vehicleId: string): number {
+    return this.vehicles.toArray().findIndex((v) => v.vehicleId === vehicleId);
+  }
+
   /* istanbul ignore next */
   display() {
     console.log("Road: ", this.direction);

@@ -18,11 +18,8 @@ export class TrafficLight {
       this.state.main = "red";
       this.state.arrow = "on";
     } else if (this.state.main === "red") {
-      if (this.state.arrow === "on") {
-        this.state.arrow = "off";
-      } else {
-        this.state.main = "green";
-      }
+      this.state.main = "green";
+      this.state.arrow = "off";
     }
   }
 }
