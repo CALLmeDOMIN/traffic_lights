@@ -75,13 +75,12 @@ function App() {
         />
       </div>
       <Nav
-        className="absolute bottom-5 right-5"
+        className="absolute bottom-5"
+        stepCount={stepCount}
         onNextStep={handleNextStep}
         onAddVehicle={handleAddVehicle}
+        onClear={() => setIntersection(new Intersection())}
       />
-      <div className="absolute bottom-5 left-5">
-        <span>Step: {stepCount}</span>
-      </div>
     </div>
   );
 }
