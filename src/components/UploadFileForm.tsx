@@ -114,7 +114,7 @@ export default function UploadFileForm({
             type="submit"
             disabled={form.formState.isValidating || !form.formState.isValid}
           >
-            Add car
+            Load
           </Button>
         </div>
       </form>

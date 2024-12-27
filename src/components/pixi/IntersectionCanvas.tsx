@@ -3,9 +3,9 @@ import { Container, Graphics, Stage } from "@pixi/react";
 import Road from "./Road";
 import VehicleComponent from "./Vehicle";
 
-import { type AnimatingVehicle } from "@/lib/types";
 import { type Intersection } from "@/backend/core/intersection";
 import { type Direction } from "@/backend/types/traffic";
+import { type Vehicle } from "@/backend/core/vehicle";
 
 const WIDTH = 500;
 const HEIGHT = 500;
@@ -13,7 +13,7 @@ const HEIGHT = 500;
 interface IntersectionCanvasProps {
   intersection: Intersection;
   movingVehicles: string[];
-  animatingVehicles: AnimatingVehicle[];
+  animatingVehicles: Vehicle[];
   onAnimationComplete: (id: string) => void;
 }
 
@@ -69,7 +69,7 @@ const VehiclesLayer = ({
 }: {
   intersection: Intersection;
   movingVehicles: string[];
-  animatingVehicles: AnimatingVehicle[];
+  animatingVehicles: Vehicle[];
   onAnimationComplete: (id: string) => void;
 }) => (
   <>
@@ -91,12 +91,12 @@ const VehiclesLayer = ({
     )}
     {animatingVehicles.map((vehicle) => (
       <VehicleComponent
-        key={vehicle.id}
-        from={vehicle.from}
-        to={vehicle.to}
+        key={vehicle.vehicleId}
+        from={vehicle.movement.from}
+        to={vehicle.movement.to}
         queuePosition={0}
         shouldMove={true}
-        onAnimationComplete={() => onAnimationComplete(vehicle.id)}
+        onAnimationComplete={() => onAnimationComplete(vehicle.vehicleId)}
       />
     ))}
   </>

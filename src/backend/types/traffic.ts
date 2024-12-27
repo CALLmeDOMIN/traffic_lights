@@ -39,6 +39,13 @@ export const TRAFFIC_RULES = {
     ["east,north", true],
   ]),
 
+  PRIORITY_THREE: new Map([
+    ["north,north", true],
+    ["south,south", true],
+    ["east,east", true],
+    ["west,west", true],
+  ]),
+
   // conflicting movements (priority three)
   CONFLICTS: [
     [

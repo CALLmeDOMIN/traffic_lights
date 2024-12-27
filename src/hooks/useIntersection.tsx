@@ -5,7 +5,7 @@ import { IntersectionController } from "@/backend/controllers/intersectionContro
 import { Vehicle } from "@/backend/core/vehicle";
 
 import { type Direction } from "@/backend/types/traffic";
-import type { AnimatingVehicle, UploadFileData } from "@/lib/types";
+import { type UploadFileData } from "@/lib/types";
 
 export function useIntersection() {
   const [intersection, setIntersection] = useState<Intersection>(
@@ -15,9 +15,7 @@ export function useIntersection() {
   const [stepCount, setStepCount] = useState(0);
   const [vehicleCount, setVehicleCount] = useState(0);
   const [movingVehicles, setMovingVehicles] = useState<string[]>([]);
-  const [animatingVehicles, setAnimatingVehicles] = useState<
-    AnimatingVehicle[]
-  >([]);
+  const [animatingVehicles, setAnimatingVehicles] = useState<Vehicle[]>([]);
 
   const handleNextStep = () => {
     const newIntersection = new Intersection();
@@ -28,11 +26,9 @@ export function useIntersection() {
 
     setAnimatingVehicles((prev) => [
       ...prev,
-      ...movedVehicles.map((v) => ({
-        id: v.vehicleId,
-        from: v.movement.from,
-        to: v.movement.to,
-      })),
+      ...movedVehicles.map(
+        (v) => new Vehicle(v.vehicleId, v.movement.from, v.movement.to),
+      ),
     ]);
     setMovingVehicles(movedVehicles.map((vehicle) => vehicle.vehicleId));
 
@@ -85,7 +81,9 @@ export function useIntersection() {
   };
 
   const handleAnimationComplete = (vehicleId: string) => {
-    setAnimatingVehicles((prev) => prev.filter((v) => v.id !== vehicleId));
+    setAnimatingVehicles((prev) =>
+      prev.filter((v) => v.vehicleId !== vehicleId),
+    );
   };
 
   return {
