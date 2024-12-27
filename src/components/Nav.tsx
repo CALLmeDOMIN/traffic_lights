@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { ChevronRight, Pause, Play } from "lucide-react";
 
-import { type Direction } from "@/backend/types/traffic";
-
 import { Button } from "./ui/button";
 import AddCarDialog from "./AddCarDialog";
 import ClearDialog from "./ClearDialog";
 import UploadFileDialog from "./UploadFileDialog";
+import { useSimulationControl } from "@/hooks/useSimulationControl";
 
 import { type UploadFileData } from "@/lib/types";
+import { type Direction } from "@/backend/types/traffic";
 
 function Nav({
   className,
@@ -26,7 +26,7 @@ function Nav({
   onClear: () => void;
   onFileUpload: (data: UploadFileData) => void;
 }) {
-  const [isRunning, setIsRunning] = useState(false);
+  const { isPlaying, togglePlay } = useSimulationControl(onNextStep);
   const [showCarDialog, setShowCarDialog] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -35,8 +35,8 @@ function Nav({
     <div className={cn("grid w-full grid-cols-10 px-4", className)}>
       <div className="col-span-2 place-self-center">Step: {stepCount}</div>
       <div className="col-span-6 flex space-x-3 place-self-center">
-        <Button onClick={() => setIsRunning(!isRunning)}>
-          {isRunning ? <Pause /> : <Play />}
+        <Button onClick={() => togglePlay()}>
+          {isPlaying ? <Pause /> : <Play />}
         </Button>
         <ClearDialog
           className="dark text-foreground"
