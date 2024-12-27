@@ -12,14 +12,9 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 const formSchema = z.object({
   startRoad: z.string().nonempty(),
@@ -52,21 +47,29 @@ export default function AddCarForm({
           control={form.control}
           name="startRoad"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-3">
               <FormLabel>Starting direction</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select starting road direction for the vehicle" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="dark">
-                  <SelectItem value="north">North</SelectItem>
-                  <SelectItem value="east">East</SelectItem>
-                  <SelectItem value="south">South</SelectItem>
-                  <SelectItem value="west">West</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="grid grid-cols-2 gap-4"
+                >
+                  {["north", "east", "south", "west"].map((direction) => (
+                    <Label
+                      key={direction}
+                      className={`flex cursor-pointer items-center justify-center rounded-md border-2 p-4 hover:bg-accent ${
+                        field.value === direction
+                          ? "border-primary"
+                          : "border-input"
+                      }`}
+                    >
+                      <RadioGroupItem value={direction} className="sr-only" />
+                      {direction.charAt(0).toUpperCase() + direction.slice(1)}
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -75,21 +78,29 @@ export default function AddCarForm({
           control={form.control}
           name="endRoad"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-3">
               <FormLabel>Ending direction</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select ending road direction for the vehicle" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="dark">
-                  <SelectItem value="north">North</SelectItem>
-                  <SelectItem value="east">East</SelectItem>
-                  <SelectItem value="south">South</SelectItem>
-                  <SelectItem value="west">West</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="grid grid-cols-2 gap-4"
+                >
+                  {["north", "east", "south", "west"].map((direction) => (
+                    <Label
+                      key={direction}
+                      className={`flex cursor-pointer items-center justify-center rounded-md border-2 p-4 hover:bg-accent ${
+                        field.value === direction
+                          ? "border-primary"
+                          : "border-input"
+                      }`}
+                    >
+                      <RadioGroupItem value={direction} className="sr-only" />
+                      {direction.charAt(0).toUpperCase() + direction.slice(1)}
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
