@@ -106,7 +106,11 @@ export default function AddCarForm({
           )}
         />
         <div className="flex justify-end space-x-4">
-          <Button variant="secondary" onClick={() => onSave(false)}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => onSave(false)}
+          >
             Close
           </Button>
           <Button
