@@ -1,12 +1,15 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { ChevronRight, Pause, Play } from "lucide-react";
 
 import { type Direction } from "@/backend/types/traffic";
 
 import { Button } from "./ui/button";
 import AddCarDialog from "./AddCarDialog";
 import ClearDialog from "./ClearDialog";
-import { ChevronRight, Pause, Play } from "lucide-react";
+import UploadFileDialog from "./UploadFileDialog";
+
+import { type UploadFileData } from "@/lib/types";
 
 function Nav({
   className,
@@ -14,16 +17,19 @@ function Nav({
   onNextStep,
   onAddVehicle,
   onClear,
+  onFileUpload,
 }: {
   className?: string;
   stepCount: number;
   onNextStep: () => void;
   onAddVehicle: (from: Direction, to: Direction) => void;
   onClear: () => void;
+  onFileUpload: (data: UploadFileData) => void;
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [showCarDialog, setShowCarDialog] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
 
   return (
     <div className={cn("grid w-full grid-cols-10 px-4", className)}>
@@ -55,7 +61,15 @@ function Nav({
         <Button variant="secondary" onClick={() => setShowCarDialog(true)}>
           Add Car
         </Button>
-        <Button variant="secondary">Load from file</Button>
+        <UploadFileDialog
+          className="dark text-foreground"
+          open={showUploadDialog}
+          setOpen={setShowUploadDialog}
+          onFileUpload={onFileUpload}
+        />
+        <Button variant="secondary" onClick={() => setShowUploadDialog(true)}>
+          Load from file
+        </Button>
       </div>
     </div>
   );
