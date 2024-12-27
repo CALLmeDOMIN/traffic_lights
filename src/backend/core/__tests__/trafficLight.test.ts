@@ -1,11 +1,11 @@
 import { TrafficLight } from "../trafficLight";
 
 describe("TrafficLight", () => {
-  it("should initialize with default state red and arrow off", () => {
+  it("should initialize with default state red and arrow on", () => {
     const trafficLight = new TrafficLight();
     expect(trafficLight.state).toEqual({
       main: "red",
-      arrow: "off",
+      arrow: "on",
     });
   });
 
@@ -26,12 +26,12 @@ describe("TrafficLight", () => {
     });
   });
 
-  it("should change from red+arrow to red only", () => {
+  it("should change from red+arrow to green", () => {
     const trafficLight = new TrafficLight("red");
     trafficLight.state.arrow = "on";
     trafficLight.change();
     expect(trafficLight.state).toEqual({
-      main: "red",
+      main: "green",
       arrow: "off",
     });
   });
@@ -57,37 +57,15 @@ describe("TrafficLight", () => {
 
     trafficLight.change();
     expect(trafficLight.state).toEqual({
-      main: "red",
+      main: "green",
       arrow: "off",
     });
 
     trafficLight.change();
     expect(trafficLight.state).toEqual({
-      main: "green",
-      arrow: "off",
+      main: "red",
+      arrow: "on",
     });
-  });
-});
-
-it("should transition through states correctly", () => {
-  const light = new TrafficLight("green");
-
-  light.change();
-  expect(light.state).toEqual({
-    main: "red",
-    arrow: "on",
-  });
-
-  light.change();
-  expect(light.state).toEqual({
-    main: "red",
-    arrow: "off",
-  });
-
-  light.change();
-  expect(light.state).toEqual({
-    main: "green",
-    arrow: "off",
   });
 });
 

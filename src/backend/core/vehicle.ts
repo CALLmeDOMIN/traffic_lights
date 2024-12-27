@@ -19,7 +19,7 @@ export class Vehicle {
    * @returns
    * 1: Priority one movement (straight)
    * 2: Priority two movement (right turn or conditional right turn)
-   * 3: Priority three movement (conflicting movements)
+   * 3: Priority three movement (conflicting movements - left turn, u-turn)
    */
   private determinePriority(movement: Movement): number {
     const movementString = `${movement.from},${movement.to}`;

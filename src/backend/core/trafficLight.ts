@@ -9,7 +9,7 @@ export class TrafficLight {
   constructor(initialState: MainLightState = "red") {
     this.state = {
       main: initialState,
-      arrow: "off",
+      arrow: initialState === "green" ? "off" : "on",
     };
   }
 

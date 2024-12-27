@@ -1,7 +1,7 @@
 import { Container, Graphics, Stage } from "@pixi/react";
 
-import Road from "./Road";
-import VehicleComponent from "./Vehicle";
+import RoadView from "./RoadView";
+import VehicleView from "./VehicleView";
 
 import { type Intersection } from "@/backend/core/intersection";
 import { type Direction } from "@/backend/types/traffic";
@@ -40,12 +40,11 @@ export default function IntersectionCanvas({
             }}
           />
           {Object.keys(intersection.roads).map((direction) => (
-            <Road
+            <RoadView
               key={direction}
               direction={direction as Direction}
               trafficLightState={
-                intersection.roads[direction as Direction].trafficLight.state
-                  .main
+                intersection.roads[direction as Direction].trafficLight
               }
             />
           ))}
@@ -77,7 +76,7 @@ const VehiclesLayer = ({
       intersection.roads[direction as Direction].vehicles
         .toArray()
         .map((vehicle) => (
-          <VehicleComponent
+          <VehicleView
             key={vehicle.vehicleId}
             from={vehicle.movement.from}
             to={vehicle.movement.to}
@@ -90,7 +89,7 @@ const VehiclesLayer = ({
         )),
     )}
     {animatingVehicles.map((vehicle) => (
-      <VehicleComponent
+      <VehicleView
         key={vehicle.vehicleId}
         from={vehicle.movement.from}
         to={vehicle.movement.to}

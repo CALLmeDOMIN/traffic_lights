@@ -6,14 +6,6 @@ import { type Direction } from "@/backend/types/traffic";
 
 type MovementPhase = "idle" | "intermediate" | "final";
 
-interface VehicleProps {
-  from: Direction;
-  to: Direction;
-  queuePosition?: number;
-  shouldMove?: boolean;
-  onAnimationComplete?: () => void;
-}
-
 const calculateMovement = (
   current: [number, number],
   target: [number, number],
@@ -168,7 +160,15 @@ const drawArrow = (g: PIXI.Graphics, x: number, y: number, angle: number) => {
   );
 };
 
-const VehicleComponent = ({
+interface VehicleProps {
+  from: Direction;
+  to: Direction;
+  queuePosition?: number;
+  shouldMove?: boolean;
+  onAnimationComplete?: () => void;
+}
+
+const VehicleView = ({
   from,
   to,
   queuePosition = 0,
@@ -226,8 +226,9 @@ const VehicleComponent = ({
         const angle = getMovementAngle(to);
         drawArrow(g, position[0], position[1], angle);
       }}
+      zIndex={2}
     />
   );
 };
 
-export default VehicleComponent;
+export default VehicleView;
