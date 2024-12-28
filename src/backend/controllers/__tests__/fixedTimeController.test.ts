@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test, vi } from "vitest";
+
 import { FixedTimeController } from "../fixedTimeController.js";
 import { Intersection } from "../../core/intersection.js";
 
@@ -8,7 +10,7 @@ describe("FixedTimeController", () => {
   beforeEach(() => {
     controller = new FixedTimeController();
     intersection = new Intersection();
-    jest.spyOn(intersection, "change");
+    vi.spyOn(intersection, "change");
   });
 
   test("should not change traffic light before STEPS_PER_CHANGE steps", () => {

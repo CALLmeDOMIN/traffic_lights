@@ -1,33 +1,39 @@
-jest.mock("@datastructures-js/queue", () => {
-  return {
-    Queue: jest.fn().mockImplementation(() => ({
-      enqueue: jest.fn(),
-      dequeue: jest.fn(),
-      size: 0,
-      toArray: jest.fn().mockReturnValue([]),
-    })),
-  };
-});
-
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Queue } from "@datastructures-js/queue";
+
 import { Road } from "../road.js";
 import { TrafficLight } from "../trafficLight.js";
 import { Vehicle } from "../vehicle.js";
 import { type Direction } from "../../types/traffic.js";
 
+type MockQueue = {
+  enqueue: ReturnType<typeof vi.fn>;
+  dequeue: ReturnType<typeof vi.fn>;
+  size: number;
+  toArray: ReturnType<typeof vi.fn>;
+};
+
+vi.mock("@datastructures-js/queue", () => ({
+  Queue: vi.fn().mockImplementation(() => ({
+    enqueue: vi.fn(),
+    dequeue: vi.fn(),
+    size: 0,
+    toArray: vi.fn().mockReturnValue([]),
+  })),
+}));
+
 describe("Road", () => {
   let road: Road;
-  let mockQueue: jest.Mocked<Queue<Vehicle>>;
+  let mockQueue: MockQueue;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    road = new Road("north" as Direction, new TrafficLight("green"));
-    mockQueue = road.vehicles as jest.Mocked<Queue<Vehicle>>;
+    road = new Road("north" as Direction);
+    mockQueue = road.vehicles as unknown as MockQueue;
   });
 
   test("constructor should initialize with given direction and traffic light", () => {
     expect(road.direction).toBe("north");
-    expect(road.trafficLight.state.main).toBe("green");
+    expect(road.trafficLight.state.main).toBe("red");
     expect(Queue).toHaveBeenCalled();
   });
 

@@ -1,5 +1,7 @@
 # Traffic_Lights
 
+![Coverage total](./badges/coverage-total.svg)
+
 # Usage
 
 1. Running simulation using CLI

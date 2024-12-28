@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test } from "vitest";
+
 import { IntersectionController } from "../intersectionController.js";
 import { Intersection } from "../../core/intersection.js";
 import { Vehicle } from "../../core/vehicle.js";

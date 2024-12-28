@@ -1,3 +1,5 @@
+import { describe, test, expect } from "vitest";
+
 import { Vehicle } from "../vehicle.js";
 import { type Direction } from "../../types/traffic.js";
 
@@ -34,7 +36,7 @@ describe("Vehicle", () => {
 
     test.each(testCases)(
       "%s should have priority %i",
-      (description, from, to, expectedPriority) => {
+      (_, from, to, expectedPriority) => {
         const vehicle = new Vehicle("test", from, to);
         expect(vehicle.priority).toBe(expectedPriority);
       },

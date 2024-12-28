@@ -1,3 +1,13 @@
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi,
+} from "vitest";
+
 import { Intersection } from "../../core/intersection";
 import { SimulationEngine } from "../simulationEngine";
 import { type Command } from "../../types/command";
@@ -6,6 +16,7 @@ type InvalidCommand = Omit<Command, "type"> & { type: string };
 
 describe("SimulationEngine error handling", () => {
   let engine: SimulationEngine;
+  const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
   beforeEach(() => {
     engine = new SimulationEngine(
@@ -13,6 +24,14 @@ describe("SimulationEngine error handling", () => {
       { commands: [] },
       "fixed",
     );
+  });
+
+  afterEach(() => {
+    consoleSpy.mockClear();
+  });
+
+  afterAll(() => {
+    consoleSpy.mockRestore();
   });
 
   test("should handle invalid commands", () => {
