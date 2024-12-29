@@ -9,6 +9,7 @@
     "build": "tsc -b && vite build",
     "start": "vite preview",
     "backend-dev": "NODE_OPTIONS='--loader ts-node/esm' TS_NODE_PROJECT='tsconfig.backend.json' node src/backend/index.ts",
+    "backend-build": "tsc -p tsconfig.backend.json",
     "backend-start": "node distBackend/index.js",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "test": "vitest run",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@testing-library/react": "^16.1.0",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
@@ -49,6 +51,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.13.0",
+    "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",

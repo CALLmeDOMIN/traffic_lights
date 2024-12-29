@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import UploadFileForm from "./UploadFileForm";
+import UploadFileForm from "./UploadFileForm/UploadFileForm";
 
 import { type UploadFileData } from "@/lib/types";
 

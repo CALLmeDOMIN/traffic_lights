@@ -2,7 +2,15 @@
 
 ## Tests
 
-![Coverage total](./badges/coverage-total.svg)
+![Branches Coverage](./badges/coverage-branches.svg)
+![Statements Coverage](./badges/coverage-statements.svg)
+
+This project prioritizes testing the business logic in isolation. For example, the file upload logic (`handleFileUpload`) is tested independently of the `UploadFileForm` component. As a result, the coverage report may show low coverage for the component, even though its critical functionality is thoroughly tested.
+
+This approach was chosen to:
+
+- Keep tests focused on the logic rather than UI details.
+- Ensure maintainable and reusable tests.
 
 ## Tech Stack
 

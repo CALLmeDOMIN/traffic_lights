@@ -10,10 +10,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+} from "../ui/form";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
+import { handleFileUpload } from "./uploadFileHandler";
 import { type UploadFileData } from "@/lib/types";
 
 const formSchema = z.object({
@@ -33,23 +34,13 @@ export default function UploadFileForm({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const data = JSON.parse(
-          event.target?.result as string,
-        ) as UploadFileData;
-        onFileUpload(data);
-        setOpen(false);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-        form.setError("file", {
-          message: "Invalid JSON format",
-        });
-      }
-    };
-    reader.readAsText(values.file);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await handleFileUpload(
+      values.file,
+      onFileUpload,
+      (field, error) => form.setError(field, error),
+      setOpen,
+    );
   }
 
   return (
@@ -75,6 +66,7 @@ export default function UploadFileForm({
               <FormDescription>
                 Please upload a JSON file with the following format:
               </FormDescription>
+              <FormMessage />
               <pre className="mt-0.5 rounded-md bg-slate-950 p-4 text-sm text-muted-foreground">
                 {`{
   "roads": {
@@ -101,11 +93,9 @@ export default function UploadFileForm({
   }
 }`}
               </pre>
-              <FormMessage />
             </FormItem>
           )}
         />
-
         <div className="flex justify-end space-x-4">
           <Button variant="secondary" type="button">
             Close

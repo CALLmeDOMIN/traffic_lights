@@ -1,7 +1,7 @@
 import { Container, Graphics, Stage } from "@pixi/react";
 
 import RoadView from "./RoadView";
-import VehicleView from "./VehicleView";
+import VehicleView from "./VehicleView/VehicleView";
 
 import { type Intersection } from "@/backend/core/intersection";
 import { type Direction } from "@/backend/types/traffic";
