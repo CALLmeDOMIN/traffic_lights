@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import { Intersection } from "@/backend/core/intersection";
 import { IntersectionController } from "@/backend/controllers/intersectionController";
+import { FixedTimeController } from "@/backend/controllers/fixedTimeController";
+import { AdaptiveController } from "@/backend/controllers/adaptiveController";
+import { Intersection } from "@/backend/core/intersection";
 import { Vehicle } from "@/backend/core/vehicle";
 
 import { type Direction } from "@/backend/types/traffic";
@@ -11,7 +13,15 @@ export function useIntersection() {
   const [intersection, setIntersection] = useState<Intersection>(
     new Intersection(),
   );
-  const intersectionController = new IntersectionController();
+
+  const [isAdaptive, setIsAdaptive] = useState(false);
+
+  const trafficController = useMemo(
+    () => (isAdaptive ? new AdaptiveController() : new FixedTimeController()),
+    [isAdaptive],
+  );
+  const vehicleController = useMemo(() => new IntersectionController(), []);
+
   const [stepCount, setStepCount] = useState(0);
   const [vehicleCount, setVehicleCount] = useState(0);
   const [movingVehicles, setMovingVehicles] = useState<string[]>([]);
@@ -22,7 +32,7 @@ export function useIntersection() {
     Object.assign(newIntersection, intersection);
 
     const movedVehicles =
-      intersectionController.handleVehicleMovement(newIntersection);
+      vehicleController.handleVehicleMovement(newIntersection);
 
     setAnimatingVehicles((prev) => [
       ...prev,
@@ -32,7 +42,7 @@ export function useIntersection() {
     ]);
     setMovingVehicles(movedVehicles.map((vehicle) => vehicle.vehicleId));
 
-    if (stepCount % 2 === 1) newIntersection.change();
+    trafficController.handleTrafficLightChange(newIntersection);
 
     setIntersection(newIntersection);
     setStepCount((prev) => prev + 1);
@@ -91,10 +101,12 @@ export function useIntersection() {
     stepCount,
     movingVehicles,
     animatingVehicles,
+    isAdaptive,
     handleNextStep,
     handleAddVehicle,
     handleClear,
     handleFileUpload,
     handleAnimationComplete,
+    toggleController: () => setIsAdaptive((prev) => !prev),
   };
 }

@@ -8,11 +8,13 @@ function App() {
     stepCount,
     movingVehicles,
     animatingVehicles,
+    isAdaptive,
     handleNextStep,
     handleAddVehicle,
     handleClear,
     handleFileUpload,
     handleAnimationComplete,
+    toggleController,
   } = useIntersection();
 
   return (
@@ -28,10 +30,12 @@ function App() {
       <Nav
         className="absolute bottom-5"
         stepCount={stepCount}
+        isAdaptive={isAdaptive}
         onNextStep={handleNextStep}
         onAddVehicle={handleAddVehicle}
         onClear={handleClear}
         onFileUpload={handleFileUpload}
+        onToggleController={toggleController}
       />
     </div>
   );

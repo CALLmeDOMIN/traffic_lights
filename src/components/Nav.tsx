@@ -14,17 +14,21 @@ import { type Direction } from "@/backend/types/traffic";
 function Nav({
   className,
   stepCount,
+  isAdaptive,
   onNextStep,
   onAddVehicle,
   onClear,
   onFileUpload,
+  onToggleController,
 }: {
   className?: string;
   stepCount: number;
+  isAdaptive: boolean;
   onNextStep: () => void;
   onAddVehicle: (from: Direction, to: Direction) => void;
   onClear: () => void;
   onFileUpload: (data: UploadFileData) => void;
+  onToggleController: () => void;
 }) {
   const { isPlaying, togglePlay } = useSimulationControl(onNextStep);
   const [showCarDialog, setShowCarDialog] = useState(false);
@@ -49,6 +53,9 @@ function Nav({
         </Button>
         <Button variant="destructive" onClick={() => setShowClearDialog(true)}>
           Clear
+        </Button>
+        <Button onClick={onToggleController}>
+          {isAdaptive ? "Switch to Fixed Time" : "Switch to Adaptive"}
         </Button>
       </div>
       <div className="col-span-2 flex flex-col justify-end space-x-3 space-y-4 md:flex-row md:space-y-0">
