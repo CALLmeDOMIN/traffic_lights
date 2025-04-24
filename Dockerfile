@@ -29,4 +29,4 @@ COPY --from=build /app/package.json /app/pnpm-lock.yaml .
 
 EXPOSE 3000
 
-CMD ["pnpm", "exec", "serve", "-s", "dist", "-l", "3000"]
+CMD ["pnpm", "start", "--host"]
