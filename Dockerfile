@@ -7,9 +7,14 @@ ENV CONTAINER_NAME=$CONTAINER_NAME
 
 WORKDIR /app
 
+COPY package.json pnpm-lock.yaml ./
+
 RUN npm install -g pnpm && \
-    pnpm install --frozen-lockfile && \
-    pnpm build
+    pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN pnpm build
 
 # Deploy image
 
