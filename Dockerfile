@@ -27,6 +27,6 @@ COPY --from=build /app/dist ./dist
 
 COPY --from=build /app/package.json /app/pnpm-lock.yaml .
 
-EXPOSE 4173
+EXPOSE 3000
 
-CMD ["pnpm", "exec", "vite", "preview", "--host"]
+CMD ["pnpm", "exec", "serve", "-s", "dist", "-l", "3000"]
